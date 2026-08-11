@@ -1,33 +1,76 @@
-<html><head>
-
-<title>spiracle hotspot demo</title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spiracle Hotspot Demo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+    }
+    .wrap {
+      max-width: 1024px;
+      margin: 0 auto;
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .instruction {
+      font-size: 1.25rem;
+      margin: 0 0 12px;
+    }
+  </style>
 </head>
+<body>
+  <main class="wrap">
+    <p class="instruction">Mouse over the mosquito spiracle, then click for magnification.</p>
 
+    <img
+      id="spiracle-image"
+      src="Psorophora_ciliata_low_mag_spir2_YsjH.jpg"
+      alt="Scanning electron micrograph of a mosquito thorax showing the spiracle region"
+      width="1024"
+      height="941"
+      usemap="#spiracle-map">
 
+    <map name="spiracle-map" id="spiracle-map">
+      <area
+        shape="poly"
+        coords="595,379,590,269,733,267,730,305,713,334,687,358,642,375"
+        href="spiracle.html"
+        alt="Spiracle. Click for magnification."
+        title="This is it! Click for magnification.">
+    </map>
+  </main>
 
-<body bgcolor="#FFFFFF" text="#000000">
+  <script>
+    // Keep the image-map hotspot aligned if the image is resized by the browser.
+    (() => {
+      const image = document.getElementById("spiracle-image");
+      const area = document.querySelector("#spiracle-map area");
+      const originalCoords = area.coords.split(",").map(Number);
+      const originalWidth = 1024;
+      const originalHeight = 941;
 
-<p>&nbsp;</p>
+      function resizeMap() {
+        const scaleX = image.clientWidth / originalWidth;
+        const scaleY = image.clientHeight / originalHeight;
+        const scaled = originalCoords.map((value, i) =>
+          Math.round(value * (i % 2 === 0 ? scaleX : scaleY))
+        );
+        area.coords = scaled.join(",");
+      }
 
-<p><font face="Geneva, Arial, Helvetica, san-serif" size="4">Mouse over the mosquito 
-
-  spiracle</font></p>
-
-<p><img src="spiracle%20hotspot%20demo_files/Psorophora_ciliata_low_mag_spir2_YsjH.jpg" width="1024" height="941" usemap="#Map" border="0"> 
-
-  <map name="Map"> 
-
-    <area shape="poly" coords="595,379,590,269,733,267,730,305,713,334,687,358,642,375" href="https://paws.wcu.edu/bdbyrd/SpiracleDemo/spiracle.html" target="_self" alt="This is it!  Click for magnification" title="This is it!  Click for magnification">
-
-  </map>
-
-</p>
-
-
-
-
-
-</body></html>
+      image.addEventListener("load", resizeMap);
+      window.addEventListener("resize", resizeMap);
+      resizeMap();
+    })();
+  </script>
+</body>
+</html>
